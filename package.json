@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "hardhat": "^2.12.7",
+    "hardhat-ethers": "^1.0.1",
+    "hardhat-waffle": "^0.0.1-security"
+  }
+}
