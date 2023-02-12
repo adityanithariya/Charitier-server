@@ -26,7 +26,7 @@ struct Member {
     string aadhar_card;
 }
 
-struct RegistrationDetails {
+struct RegDetails {
     address id;
     string uid;
     string reg_no;
@@ -39,13 +39,14 @@ struct RegistrationDetails {
 
 struct ContactDetails {
     Address addr;
-    PhoneNumber[2] phone_number;
+    PhoneNumber phone_number;
+    PhoneNumber alt_phone_number;
     string email;
     Date last_modified;
 }
 
 struct SectorDetails {
-    string KeyIssues;
+    string key_issues;
     Address addr;
 }
 
@@ -57,14 +58,14 @@ struct FCRADetails {
 struct FundSource {
     string dept_name;
     string source_type;
-    uint16[2] financial_year;
+    string financial_year;
     uint256 amount;
     string purpose;
-    uint8[2] range;
+    string range;
 }
 
 struct NGO {
-    RegistrationDetails reg;
+    RegDetails reg_details;
     string reg_cert;
     string act_name;
     string registered_with;
@@ -72,16 +73,16 @@ struct NGO {
     string name;
     Member[10] members;
     SectorDetails sector;
-    FCRADetails FCRA;
+    FCRADetails FCRA_details;
     string achievements;
-    mapping(uint => FundSource) src;
+    mapping(uint => FundSource) srcs;
     uint totalSources;
-    ContactDetails contact;
+    ContactDetails contact_details;
     string website_url;
 }
 
 struct Family {
-    RegistrationDetails reg;
+    RegDetails reg;
     ContactDetails contact;
     Member[4] members;
 }
@@ -93,4 +94,12 @@ struct Transaction {
     string proofs;
     Date date;
     bool is_verified;
+}
+
+struct Admin {
+    address id;
+    string uid;
+    string name;
+    string role;
+    bool can_verify;
 }
