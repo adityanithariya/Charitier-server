@@ -1,22 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.0 <0.9.0;
 
-struct Date {
-    uint8 date;
-    uint8 month;
-    uint16 year;
-}
-
 struct Address {
     string place;
     string city;
     string state;
-    uint32 pin_code;
+    uint32 pincode;
 }
 
 struct PhoneNumber {
-    uint code;
-    uint phone_number;
+    uint256 code;
+    uint256 phone_number;
 }
 
 struct Member {
@@ -24,13 +18,14 @@ struct Member {
     string role;
     string pan_card;
     string aadhar_card;
+    bool does_exist;
 }
 
-struct RegistrationDetails {
+struct RegDetails {
     address id;
     string uid;
     string reg_no;
-    Date reg_date;
+    uint256 reg_date;
     string pan_card;
     Address addr;
     bool is_verified;
@@ -39,13 +34,14 @@ struct RegistrationDetails {
 
 struct ContactDetails {
     Address addr;
-    PhoneNumber[2] phone_number;
+    PhoneNumber phone_number;
+    PhoneNumber alt_phone_number;
     string email;
-    Date last_modified;
+    uint256 last_modified;
 }
 
 struct SectorDetails {
-    string KeyIssues;
+    string key_issues;
     Address addr;
 }
 
@@ -57,31 +53,31 @@ struct FCRADetails {
 struct FundSource {
     string dept_name;
     string source_type;
-    uint16[2] financial_year;
+    uint256[2] financial_year;
     uint256 amount;
     string purpose;
-    uint8[2] range;
+    bool does_exist;
 }
 
 struct NGO {
-    RegistrationDetails reg;
+    RegDetails reg_details;
     string reg_cert;
     string act_name;
-    string registered_with;
+    address registered_with;
     string type_of_NGO;
     string name;
-    Member[10] members;
+    mapping(uint256 => Member) members;
     SectorDetails sector;
-    FCRADetails FCRA;
+    FCRADetails FCRA_details;
     string achievements;
-    mapping(uint => FundSource) src;
-    uint totalSources;
-    ContactDetails contact;
+    mapping(uint256 => FundSource) srcs;
+    uint256[2] total_members_sources;
+    ContactDetails contact_details;
     string website_url;
 }
 
 struct Family {
-    RegistrationDetails reg;
+    RegDetails reg;
     ContactDetails contact;
     Member[4] members;
 }
@@ -91,6 +87,28 @@ struct Transaction {
     string donor_uid;
     address reciever;
     string proofs;
-    Date date;
+    uint256 date;
     bool is_verified;
+}
+
+struct Admin {
+    address id;
+    string uid;
+    string name;
+    string role;
+    bool can_verify;
+}
+
+enum strDetails {
+    uid,
+    reg_no,
+    pan_card,
+    reg_cert,
+    act_name,
+    type_of_NGO,
+    name,
+    key_issues,
+    achievements,
+    email,
+    website_url
 }

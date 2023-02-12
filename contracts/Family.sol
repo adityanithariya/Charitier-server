@@ -3,9 +3,9 @@ pragma solidity >=0.5.0 <0.9.0;
 
 // import "hardhat/console.sol";
 import "./utility/Structures.sol";
-import "./NGO.sol";
-import "./Family.sol";
+import "./Admin.sol";
 
-contract Charitier {
-    mapping(address => Transaction[]) public Transactions;
+contract FamilyContract {
+    mapping(address => Family) public Families;
+    address[] public FamilyList;
 }
