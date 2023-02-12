@@ -1,27 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity >=0.5.0 <0.9.0;
 
 // import "hardhat/console.sol";
+import "./utility/Structures.sol";
 
-struct NGO {
-    address id;
-    string name;
-    
-}
-
-struct Family {
-    address id;
-}
-
-struct Transaction {
-    uint256 id;
-    string donor;
-    address reciever;
-    bool is_verified;
-}
-
-contract Charitier {
+contract NGOContract {
     mapping(address => NGO) public NGOs;
+    address[] NGOList;
+}
+
+contract FamilyContract {
     mapping(address => Family) public Families;
-    mapping(address => Transaction) Transactions;
+    address[] FamilyList;
+}
+
+contract Charitier is NGOContract, FamilyContract {
+    mapping(address => Transaction[]) public Transactions;
 }

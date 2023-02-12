@@ -1,7 +1,17 @@
 {
   "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@nomiclabs/hardhat-ethers": "^2.2.2",
+    "@nomiclabs/hardhat-etherscan": "^3.1.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "chai": "^4.3.7",
+    "ethereum-waffle": "^4.0.9",
+    "ethers": "^5.7.0",
     "hardhat": "^2.12.7",
     "hardhat-ethers": "^1.0.1",
     "hardhat-waffle": "^0.0.1-security"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
 }
