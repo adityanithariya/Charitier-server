@@ -8,8 +8,11 @@ contract AdminContract {
     mapping(address => Admin) admins;
     address[] adminList;
 
-    modifier isAdmin() {
+    function isAdmin() external view {
         require(admins[msg.sender].id == msg.sender);
-        _;
     }
+}
+
+interface AdminInter {
+    function isAdmin() external;
 }

@@ -6,6 +6,12 @@ require("dotenv").config();
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
     solidity: "0.8.17",
+    paths: {
+        artifacts:
+            process.env.ENVIRONMENT === "develop"
+                ? "./artifacts"
+                : "../client/artifacts/",
+    },
     defaultNetwork: "localhost",
     networks: {
         goerli: {
@@ -15,6 +21,6 @@ module.exports = {
         },
     },
     etherscan: {
-        apiKey: process.env.ETHERSCAN_API_KEY, // Your Etherscan API key
+        apiKey: process.env.ETHERSCAN_API_KEY,
     },
 };

@@ -3,7 +3,7 @@ NGO
         address id                    - once
         string uid                    - edit
         string reg_no                 - edit
-        Date reg_date                 - once
+        uint reg_date                 - once
         string pan_card               - edit
         Address addr                  - once
         bool is_verified              - once
@@ -13,32 +13,33 @@ NGO
     string registered_with            - edit    
     string type_of_NGO                - edit
     string name                       - edit
-    Member[10] members
+    Member[10] members                - edit
         string name
         string role
         string pan_card
         string aadhar_card
+        bool is_present
     SectorDetails sector
         string key_issues             - edit    
-        Address addr                  - 
+        Address addr                  - edit
     FCRADetails FCRA_details
-        bool is_available             - 
-        uint256 reg_no                - 
+        bool is_available             - edit
+        uint256 reg_no                - edit
     string achievements               - edit
     mapping(uint => FundSource) srcs
         string dept_name
         string source_type
-        string financial_year
+        uint[2] financial_year
         uint256 amount
         string purpose
-        string range
-    uint totalSources
+        uint[2] range
+    uint[2] total_members_sources     - auto
     ContactDetails contact_details
-        Address addr;                 - 
-        PhoneNumber phone_number;     - 
-        PhoneNumber alt_phone_number; - 
+        Address addr;                 - edit
+        PhoneNumber phone_number;     - edit
+        PhoneNumber alt_phone_number; - edit
         string email;                 - edit
-        Date last_modified;           - 
+        uint last_modified;           - auto
     string website_url                - edit
 
 Family

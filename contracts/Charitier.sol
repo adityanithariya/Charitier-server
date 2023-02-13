@@ -6,6 +6,6 @@ import "./utility/Structures.sol";
 import "./NGO.sol";
 import "./Family.sol";
 
-contract Charitier is NGOContract, FamilyContract {
+contract Charitier {
     mapping(address => Transaction[]) public Transactions;
 }
