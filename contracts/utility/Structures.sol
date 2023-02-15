@@ -99,3 +99,17 @@ struct Admin {
     string role;
     bool can_verify;
 }
+
+enum strDetails {
+    uid,
+    reg_no,
+    pan_card,
+    reg_cert,
+    act_name,
+    type_of_NGO,
+    name,
+    key_issues,
+    achievements,
+    email,
+    website_url
+}

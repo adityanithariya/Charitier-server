@@ -1,18 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.0 <0.9.0;
 
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 import "./utility/Structures.sol";
 import "./utility/Functions.sol";
-import "./Admin.sol";
+import "./utility/Interfaces.sol";
 
-contract NGOContract {
-    address admin_contract;
+contract NGOContract is NGOInter {
+    address[2] public addrs;
     mapping(address => NGO) public NGOs;
     address[] public NGOList;
 
-    constructor(address _admin_contract) {
-        admin_contract = _admin_contract;
+    constructor(address admin_contract) {
+        addrs[0] = msg.sender;
+        addrs[1] = admin_contract;
+    }
+
+    function setAdminCtr(address ctr) public {
+        addrs[1] = ctr;
     }
 
     modifier isNGO() {
@@ -43,6 +48,7 @@ contract NGOContract {
         NGO storage ngo = NGOs[msg.sender];
         require(ngo.reg_details.id == address(0), "Account already exists");
         NGOList.push(msg.sender);
+        console.log(msg.sender);
         ngo.reg_details = RegDetails(
             msg.sender,
             reg_details.uid,
@@ -50,8 +56,8 @@ contract NGOContract {
             block.timestamp,
             reg_details.pan_card,
             reg_details.addr,
-            reg_details.is_verified,
-            reg_details.is_active
+            false,
+            true
         );
         ngo.reg_cert = reg_cert;
         ngo.act_name = act_name;
@@ -92,30 +98,30 @@ contract NGOContract {
         updateLastModified();
     }
 
-    function editstrNGODetail(string memory detail_code, string memory val)
+    function editstrNGODetail(strDetails detail_code, string memory val)
         external
         isNGO
     {
         NGO storage ngo = NGOs[msg.sender];
         bool is_changed = true;
-        if (isEqual(detail_code, "uid"))                ngo.reg_details.uid = val;
-        else if (isEqual(detail_code, "reg_no"))        ngo.reg_details.reg_no = val;
-        else if (isEqual(detail_code, "pan_card"))      ngo.reg_details.pan_card = val;
-        else if (isEqual(detail_code, "reg_cert"))      ngo.reg_cert = val;
-        else if (isEqual(detail_code, "act_name"))      ngo.act_name = val;
-        else if (isEqual(detail_code, "type_of_NGO"))   ngo.type_of_NGO = val;
-        else if (isEqual(detail_code, "name"))          ngo.name = val;
-        else if (isEqual(detail_code, "key_issues"))    ngo.sector.key_issues = val;
-        else if (isEqual(detail_code, "achievements"))  ngo.achievements = val;
-        else if (isEqual(detail_code, "email"))         ngo.contact_details.email = val;
-        else if (isEqual(detail_code, "website_url"))   ngo.website_url = val;
+        if      (detail_code == strDetails.uid)          ngo.reg_details.uid = val;
+        else if (detail_code == strDetails.reg_no)       ngo.reg_details.reg_no = val;
+        else if (detail_code == strDetails.pan_card)     ngo.reg_details.pan_card = val;
+        else if (detail_code == strDetails.reg_cert)     ngo.reg_cert = val;
+        else if (detail_code == strDetails.act_name)     ngo.act_name = val;
+        else if (detail_code == strDetails.type_of_NGO)  ngo.type_of_NGO = val;
+        else if (detail_code == strDetails.name)         ngo.name = val;
+        else if (detail_code == strDetails.key_issues)   ngo.sector.key_issues = val;
+        else if (detail_code == strDetails.achievements) ngo.achievements = val;
+        else if (detail_code == strDetails.email)        ngo.contact_details.email = val;
+        else if (detail_code == strDetails.website_url)  ngo.website_url = val;
         else is_changed = false;
 
         if (is_changed) updateLastModified();
     }
 
     function verifyNGO(address id) external {
-        AdminInter(admin_contract).isAdmin();
+        AdminInter(addrs[1]).isAdmin();
         NGO storage ngo = NGOs[id];
         RegDetails storage reg = ngo.reg_details;
         require(reg.id == id, "NGO doesn't exist!");
@@ -124,20 +130,10 @@ contract NGOContract {
         ngo.registered_with = msg.sender;
     }
 
-    function getStatus() external view isNGO returns (bool) {
-        return NGOs[msg.sender].reg_details.is_active;
-    }
-
-    function deactivateNGO() external isNGO {
+    function toggleNGOStatus() external isNGO {
         RegDetails storage reg = NGOs[msg.sender].reg_details;
-        require(reg.is_active == true, "Already deactivated");
-        reg.is_active = false;
-    }
-
-    function reactivateNGO() external isNGO {
-        RegDetails storage reg = NGOs[msg.sender].reg_details;
-        require(reg.is_active == false, "Already active");
-        reg.is_active = true;
+        if (reg.is_active) reg.is_active = false;
+        else reg.is_active = true;
     }
 
     function editNGOAddress(uint8 addr_id, Address memory addr) external isNGO {
@@ -277,20 +273,4 @@ contract NGOContract {
         ngo.srcs[id].does_exist = false;
         updateLastModified();
     }
-}
-
-interface NGOInter {
-    function createNGO(
-        RegDetails memory,
-        string memory,
-        string memory,
-        address,
-        string memory,
-        string memory,
-        SectorDetails memory,
-        FCRADetails memory,
-        string memory,
-        ContactDetails memory,
-        string memory
-    ) external;
 }

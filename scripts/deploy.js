@@ -1,21 +1,46 @@
-const { run, network } = require("hardhat");
+const { run, network, ethers } = require("hardhat");
+const {
+    openSync,
+    writeFileSync,
+    closeSync,
+    existsSync,
+    mkdirSync,
+} = require("fs");
 
 async function main() {
-    const Charitier = await ethers.getContractFactory("Charitier");
-    const charitier = await Charitier.deploy();
+    let obj = {};
+    const AdminContract = await ethers.getContractFactory("AdminContract");
+    const admin = await AdminContract.deploy();
 
-    await charitier.deployed();
+    await admin.deployed();
+    obj.AdminContract = admin.address;
+
+    const NGOContract = await ethers.getContractFactory("NGOContract");
+    const ngo = await NGOContract.deploy(admin.address);
+
+    await ngo.deployed();
+    obj.NGOContract = ngo.address;
+
+    if (!existsSync("./scripts/cache")) mkdirSync("./scripts/cache");
+
+    fd = openSync("./scripts/cache/address.json", "w");
+    writeFileSync(fd, JSON.stringify(obj), "utf8");
+    closeSync(fd);
 
     if (network.config.chainId === 5 && process.env.ETHERSCAN_API_KEY) {
-        await charitier.deployTransaction.wait(6);
-        verify(charitier.address, []);
+        verify(admin, []);
+        verify(ngo, [admin.address]);
         console.log("Verified!");
     }
 
-    return charitier;
+    obj.AdminContract = AdminContract;
+    obj.NGOContract = NGOContract;
+
+    return obj;
 }
 
-async function verify(contractAddress, args) {
+const verify = async (contract, args) => {
+    await contract.deployTransaction.wait(6);
     try {
         await run("verify:verify", {
             address: contractAddress,
@@ -28,7 +53,7 @@ async function verify(contractAddress, args) {
             console.log(error);
         }
     }
-}
+};
 
 main()
     .then(() => {
