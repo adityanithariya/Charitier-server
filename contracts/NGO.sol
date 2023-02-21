@@ -48,7 +48,6 @@ contract NGOContract is NGOInter {
         NGO storage ngo = NGOs[msg.sender];
         require(ngo.reg_details.id == address(0), "Account already exists");
         NGOList.push(msg.sender);
-        console.log(msg.sender);
         ngo.reg_details = RegDetails(
             msg.sender,
             reg_details.uid,
@@ -85,6 +84,7 @@ contract NGOContract is NGOInter {
         ContactDetails memory contact_details,
         string memory website_url
     ) external isNGO {
+        console.log("msg.sender: ", msg.sender);
         NGO storage ngo = NGOs[msg.sender];
         ngo.reg_cert = reg_cert;
         ngo.act_name = act_name;

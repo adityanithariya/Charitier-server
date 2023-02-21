@@ -1,11 +1,5 @@
 const { run, network, ethers } = require("hardhat");
-const {
-    openSync,
-    writeFileSync,
-    closeSync,
-    existsSync,
-    mkdirSync,
-} = require("fs");
+const { writeFileSync, existsSync, mkdirSync } = require("fs");
 
 async function main() {
     let obj = {};
@@ -22,10 +16,7 @@ async function main() {
     obj.NGOContract = ngo.address;
 
     if (!existsSync("./scripts/cache")) mkdirSync("./scripts/cache");
-
-    fd = openSync("./scripts/cache/address.json", "w");
-    writeFileSync(fd, JSON.stringify(obj), "utf8");
-    closeSync(fd);
+    writeFileSync("./scripts/cache/address.json", JSON.stringify(obj), "utf8");
 
     if (network.config.chainId === 5 && process.env.ETHERSCAN_API_KEY) {
         verify(admin, []);
