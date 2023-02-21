@@ -5,7 +5,7 @@ struct Address {
     string place;
     string city;
     string state;
-    uint32 pin_code;
+    uint32 pincode;
 }
 
 struct PhoneNumber {

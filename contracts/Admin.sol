@@ -21,6 +21,6 @@ contract AdminContract is AdminInter {
     }
 
     function isAdmin() external view {
-        require(admins[msg.sender].id == msg.sender);
+        require(admins[msg.sender].id == msg.sender, "Unauthorized Access");
     }
 }

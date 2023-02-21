@@ -15,7 +15,9 @@
     "hardhat": "^2.12.7"
   },
   "scripts": {
-    "test": "yarn hardhat test"
+    "test": "yarn hardhat test",
+    "start": "yarn hardhat node",
+    "deploy": "yarn hardhat run scripts/deploy.js"
   },
   "repository": {
     "type": "git",
