@@ -56,7 +56,6 @@ struct FundSource {
     uint256[2] financial_year;
     uint256 amount;
     string purpose;
-    uint256[2] range;
     bool does_exist;
 }
 

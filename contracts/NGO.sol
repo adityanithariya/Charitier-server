@@ -84,7 +84,6 @@ contract NGOContract is NGOInter {
         ContactDetails memory contact_details,
         string memory website_url
     ) external isNGO {
-        console.log("msg.sender: ", msg.sender);
         NGO storage ngo = NGOs[msg.sender];
         ngo.reg_cert = reg_cert;
         ngo.act_name = act_name;
@@ -98,23 +97,26 @@ contract NGOContract is NGOInter {
         updateLastModified();
     }
 
-    function editstrNGODetail(strDetails detail_code, string memory val)
-        external
-        isNGO
-    {
+    function editstrNGODetail(
+        strDetails detail_code,
+        string memory val
+    ) external isNGO {
         NGO storage ngo = NGOs[msg.sender];
         bool is_changed = true;
-        if      (detail_code == strDetails.uid)          ngo.reg_details.uid = val;
-        else if (detail_code == strDetails.reg_no)       ngo.reg_details.reg_no = val;
-        else if (detail_code == strDetails.pan_card)     ngo.reg_details.pan_card = val;
-        else if (detail_code == strDetails.reg_cert)     ngo.reg_cert = val;
-        else if (detail_code == strDetails.act_name)     ngo.act_name = val;
-        else if (detail_code == strDetails.type_of_NGO)  ngo.type_of_NGO = val;
-        else if (detail_code == strDetails.name)         ngo.name = val;
-        else if (detail_code == strDetails.key_issues)   ngo.sector.key_issues = val;
+        if (detail_code == strDetails.uid) ngo.reg_details.uid = val;
+        else if (detail_code == strDetails.reg_no) ngo.reg_details.reg_no = val;
+        else if (detail_code == strDetails.pan_card)
+            ngo.reg_details.pan_card = val;
+        else if (detail_code == strDetails.reg_cert) ngo.reg_cert = val;
+        else if (detail_code == strDetails.act_name) ngo.act_name = val;
+        else if (detail_code == strDetails.type_of_NGO) ngo.type_of_NGO = val;
+        else if (detail_code == strDetails.name) ngo.name = val;
+        else if (detail_code == strDetails.key_issues)
+            ngo.sector.key_issues = val;
         else if (detail_code == strDetails.achievements) ngo.achievements = val;
-        else if (detail_code == strDetails.email)        ngo.contact_details.email = val;
-        else if (detail_code == strDetails.website_url)  ngo.website_url = val;
+        else if (detail_code == strDetails.email)
+            ngo.contact_details.email = val;
+        else if (detail_code == strDetails.website_url) ngo.website_url = val;
         else is_changed = false;
 
         if (is_changed) updateLastModified();
@@ -122,12 +124,10 @@ contract NGOContract is NGOInter {
 
     function verifyNGO(address id) external {
         AdminInter(addrs[1]).isAdmin();
-        NGO storage ngo = NGOs[id];
-        RegDetails storage reg = ngo.reg_details;
-        require(reg.id == id, "NGO doesn't exist!");
-        require(reg.is_verified != true, "Already Verified!");
-        reg.is_verified = true;
-        ngo.registered_with = msg.sender;
+        require(NGOs[id].reg_details.id == id, "NGO doesn't exist!");
+        require(NGOs[id].reg_details.is_verified != true, "Already Verified!");
+        NGOs[id].reg_details.is_verified = true;
+        NGOs[id].registered_with = msg.sender;
     }
 
     function toggleNGOStatus() external isNGO {
@@ -146,10 +146,10 @@ contract NGOContract is NGOInter {
         updateLastModified();
     }
 
-    function editNGOPhoneNumber(uint8 ph_id, PhoneNumber memory phone_number)
-        external
-        isNGO
-    {
+    function editNGOPhoneNumber(
+        uint8 ph_id,
+        PhoneNumber memory phone_number
+    ) external isNGO {
         NGO storage ngo = NGOs[msg.sender];
         if (ph_id == 0) {
             ngo.contact_details.phone_number = phone_number;
@@ -166,6 +166,14 @@ contract NGOContract is NGOInter {
         updateLastModified();
     }
 
+    function getNGOTotals(
+        address id,
+        uint val_id
+    ) external view returns (uint val) {
+        require(NGOs[id].reg_details.id == id, "NGO doesn't exists");
+        val = NGOs[id].total_members_sources[val_id];
+    }
+
     function addNGOMember(
         string memory name,
         string memory role,
@@ -179,14 +187,9 @@ contract NGOContract is NGOInter {
         updateLastModified();
     }
 
-    function readNGOMember(uint256 id)
-        external
-        view
-        isNGO
-        returns (Member memory member)
-    {
-        NGO storage ngo = NGOs[msg.sender];
-        require(id <= ngo.total_members_sources[0], "Member out of range");
+    function readNGOMember(
+        uint256 id
+    ) external view returns (Member memory member) {
         member = NGOs[msg.sender].members[id];
     }
 
@@ -195,8 +198,7 @@ contract NGOContract is NGOInter {
         uint8 val_id,
         string memory val
     ) external isNGO {
-        NGO storage ngo = NGOs[msg.sender];
-        Member storage member = ngo.members[id];
+        Member storage member = NGOs[msg.sender].members[id];
         if (val_id == 0) member.name = val;
         else if (val_id == 1) member.role = val;
         else if (val_id == 2) member.pan_card = val;
@@ -205,8 +207,7 @@ contract NGOContract is NGOInter {
     }
 
     function removeNGOMember(uint8 id) external isNGO {
-        NGO storage ngo = NGOs[msg.sender];
-        ngo.members[id].does_exist = false;
+        NGOs[msg.sender].members[id].does_exist = false;
         updateLastModified();
     }
 
@@ -215,8 +216,7 @@ contract NGOContract is NGOInter {
         string memory source_type,
         uint256[2] memory financial_year,
         uint256 amount,
-        string memory purpose,
-        uint256[2] memory range
+        string memory purpose
     ) external isNGO {
         FundSource memory fs = FundSource(
             dept_name,
@@ -224,30 +224,33 @@ contract NGOContract is NGOInter {
             financial_year,
             amount,
             purpose,
-            range,
             true
         );
         NGO storage ngo = NGOs[msg.sender];
         ngo.srcs[ngo.total_members_sources[1]] = fs;
+        ngo.total_members_sources[1]++;
         updateLastModified();
     }
 
-    function readNGOSource(uint256 id)
-        external
-        view
-        isNGO
-        returns (FundSource memory src)
-    {
-        NGO storage ngo = NGOs[msg.sender];
-        require(id <= ngo.total_members_sources[1], "Sources out of range");
+    function readNGOSource(
+        uint256 id
+    ) external view returns (FundSource memory src) {
+        require(
+            id <= NGOs[msg.sender].total_members_sources[1],
+            "Sources out of range"
+        );
         src = NGOs[msg.sender].srcs[id];
     }
 
-    function editNGOSource(uint256 id, string memory val) external isNGO {
+    function editNGOSource(
+        uint256 id,
+        uint256 val_id,
+        string memory val
+    ) external isNGO {
         FundSource storage src = NGOs[msg.sender].srcs[id];
-        if (id == 0) src.dept_name = val;
-        else if (id == 1) src.source_type = val;
-        else if (id == 2) src.purpose = val;
+        if (val_id == 0) src.dept_name = val;
+        else if (val_id == 1) src.source_type = val;
+        else if (val_id == 2) src.purpose = val;
         updateLastModified();
     }
 
@@ -257,20 +260,33 @@ contract NGOContract is NGOInter {
         updateLastModified();
     }
 
-    function editNGOSourceRanges(
-        uint256 id,
-        uint8 val_id,
-        uint256[2] memory val
-    ) external isNGO {
+    function editNGOSourceFY(uint256 id, uint256[2] memory val) external isNGO {
         FundSource storage src = NGOs[msg.sender].srcs[id];
-        if (val_id == 0) src.financial_year = val;
-        else if (val_id == 1) src.range = val;
+        src.financial_year = val;
         updateLastModified();
     }
 
     function removeNGOSource(uint8 id) external isNGO {
         NGO storage ngo = NGOs[msg.sender];
         ngo.srcs[id].does_exist = false;
+        updateLastModified();
+    }
+
+    function restoreNGOAttrs(uint256 val_id, uint256 id) external isNGO {
+        require(val_id <= 1, "Index out of range");
+        if (val_id == 0) {
+            require(
+                id < NGOs[msg.sender].total_members_sources[0],
+                "Member not found!"
+            );
+            NGOs[msg.sender].members[id].does_exist = true;
+        } else if (val_id == 1) {
+            require(
+                id < NGOs[msg.sender].total_members_sources[1],
+                "Source not found!"
+            );
+            NGOs[msg.sender].srcs[id].does_exist = true;
+        }
         updateLastModified();
     }
 }

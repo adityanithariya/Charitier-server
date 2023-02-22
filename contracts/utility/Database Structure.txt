@@ -32,7 +32,6 @@ NGO
         uint[2] financial_year
         uint256 amount
         string purpose
-        uint[2] range
     uint[2] total_members_sources     - auto
     ContactDetails contact_details
         Address addr;                 - edit

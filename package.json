@@ -17,7 +17,8 @@
   "scripts": {
     "test": "yarn hardhat test",
     "start": "yarn hardhat node",
-    "deploy": "yarn hardhat run scripts/deploy.js"
+    "deploy": "yarn hardhat run scripts/deploy.js",
+    "compile": "yarn hardhat compile"
   },
   "repository": {
     "type": "git",

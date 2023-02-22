@@ -73,8 +73,7 @@ interface NGOInter {
         string memory source_type,
         uint256[2] memory financial_year,
         uint256 amount,
-        string memory purpose,
-        uint256[2] memory range
+        string memory purpose
     ) external;
 
     function readNGOSource(uint256 id)
@@ -82,13 +81,12 @@ interface NGOInter {
         view
         returns (FundSource memory src);
 
-    function editNGOSource(uint256 id, string memory val) external;
+    function editNGOSource(uint256 id, uint256 val_id, string memory val) external;
 
     function editNGOSourceAmt(uint256 id, uint256 amount) external;
 
-    function editNGOSourceRanges(
+    function editNGOSourceFY(
         uint256 id,
-        uint8 val_id,
         uint256[2] memory val
     ) external;
 
