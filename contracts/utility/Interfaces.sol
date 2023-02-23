@@ -102,3 +102,41 @@ interface NGOInter {
 
     function restoreNGOAttrs(uint256 val_id, uint256 id) external;
 }
+
+interface FamilyInter {
+    function getFamilyList(uint id) external view returns (address family);
+
+    function createFamily(
+        RegDetails memory reg_details,
+        ContactDetails memory contact_details
+    ) external;
+
+    function editFamilyRegDetails(
+        string memory uid,
+        string memory reg_no,
+        string memory pan_card,
+        Address memory addr
+    ) external;
+
+    function editFamilyContactDetails(
+        Address memory addr,
+        PhoneNumber memory phone_number,
+        PhoneNumber memory alt_phone_number,
+        string memory email
+    ) external;
+
+    function getFamilyTotalMembers(address id) external view returns (uint val);
+
+    function addFamilyMember(FamilyMember memory member) external;
+
+    function readFamilyMember(
+        address family_id,
+        uint member_id
+    ) external view returns (FamilyMember memory member);
+
+    function editFamilyMember(uint id, uint val_id, string memory val) external;
+
+    function removeFamilyMember(uint id) external;
+
+    function restoreFamilyMember(uint id) external;
+}

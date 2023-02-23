@@ -21,6 +21,15 @@ struct Member {
     bool does_exist;
 }
 
+struct FamilyMember {
+    string name;
+    string image;
+    string role;
+    string pan_card;
+    string aadhar_card;
+    bool does_exist;
+}
+
 struct RegDetails {
     address id;
     string uid;
@@ -77,9 +86,10 @@ struct NGO {
 }
 
 struct Family {
-    RegDetails reg;
-    ContactDetails contact;
-    Member[4] members;
+    RegDetails reg_details;
+    ContactDetails contact_details;
+    mapping(uint => FamilyMember) members;
+    uint total_members;
 }
 
 struct Transaction {
