@@ -9,7 +9,7 @@ import "./utility/Interfaces.sol";
 contract NGOContract is NGOInter {
     address[2] public addrs;
     mapping(address => NGO) public NGOs;
-    address[] public NGOList;
+    address[] NGOList;
 
     constructor(address admin_contract) {
         addrs[0] = msg.sender;
@@ -17,6 +17,7 @@ contract NGOContract is NGOInter {
     }
 
     function setAdminCtr(address ctr) public {
+        require(msg.sender == addrs[0]);
         addrs[1] = ctr;
     }
 
@@ -30,6 +31,10 @@ contract NGOContract is NGOInter {
 
     function updateLastModified() internal {
         NGOs[msg.sender].contact_details.last_modified = block.timestamp;
+    }
+
+    function getNGOList(uint256 id) external view returns(address ngo) {
+        ngo = NGOList[id];
     }
 
     function createNGO(
@@ -70,6 +75,7 @@ contract NGOContract is NGOInter {
         ngo.website_url = website_url;
         ngo.total_members_sources[0] = 0;
         ngo.total_members_sources[1] = 0;
+        NGOList.push(msg.sender);
         updateLastModified();
     }
 

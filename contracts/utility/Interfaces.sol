@@ -8,6 +8,8 @@ interface AdminInter {
 }
 
 interface NGOInter {
+    function getNGOList(uint256 id) external view returns (address ngo);
+
     function createNGO(
         RegDetails memory,
         string memory,

@@ -21,6 +21,10 @@ describe("NGOContract", function () {
             "NGOContract doesn't have correct address of AdminContract"
         );
     });
+    it("Change Admin Contract Address Revert", async () => {
+        [_, account2] = await ethers.getSigners();
+        await expect(this.NGOContract.connect(account2).setAdminCtr(this.account.address)).to.be.reverted;
+    });
     it("Create NGO", async () => {
         const args = [
             [
@@ -66,6 +70,11 @@ describe("NGOContract", function () {
                 }
             } else expect(args[i]).to.equal(ngo[i]);
         }
+    });
+    it("Get NGO List", async () => {
+        expect(await this.NGOContract.getNGOList(0)).to.equal(
+            this.account.address
+        );
     });
     it("isNGO Modifier Revert", async () => {
         [account, other_account] = await ethers.getSigners();
@@ -176,7 +185,10 @@ describe("NGOContract", function () {
             "pan_card",
             "aadhaar_card"
         );
-        let member = await this.NGOContract.readNGOMember(this.account.address, 0);
+        let member = await this.NGOContract.readNGOMember(
+            this.account.address,
+            0
+        );
         expect(member["name"]).to.equal("name");
         expect(member["role"]).to.equal("role");
         expect(member["pan_card"]).to.equal("pan_card");
@@ -186,14 +198,18 @@ describe("NGOContract", function () {
     it("Edit Member", async () => {
         for (let index = 0; index < 4; index++) {
             await this.NGOContract.editNGOMember(0, index, "new_val");
-            expect((await this.NGOContract.readNGOMember(this.account.address, 0))[index]).to.equal(
-                "new_val"
-            );
+            expect(
+                (await this.NGOContract.readNGOMember(this.account.address, 0))[
+                    index
+                ]
+            ).to.equal("new_val");
         }
     });
     it("Remove Member", async () => {
         await this.NGOContract.removeNGOMember(0);
-        expect((await this.NGOContract.readNGOMember(this.account.address, 0))[4]).to.equal(false);
+        expect(
+            (await this.NGOContract.readNGOMember(this.account.address, 0))[4]
+        ).to.equal(false);
     });
     it("Get Total Members", async () => {
         [account, other_account] = await ethers.getSigners();
@@ -215,7 +231,10 @@ describe("NGOContract", function () {
             200000,
             "purpose"
         );
-        let source = await this.NGOContract.readNGOSource(this.account.address, 0);
+        let source = await this.NGOContract.readNGOSource(
+            this.account.address,
+            0
+        );
         expect(source["dept_name"]).to.equal("dept_name");
         expect(source["source_type"]).to.equal("source_type");
         expect(Number(source["financial_year"][0]._hex)).to.equal(2022);
@@ -229,22 +248,36 @@ describe("NGOContract", function () {
         await this.NGOContract.editNGOSource(0, 1, "new_source_type");
         await this.NGOContract.editNGOSource(0, 2, "new_purpose");
 
-        let source = await this.NGOContract.readNGOSource(this.account.address, 0);
+        let source = await this.NGOContract.readNGOSource(
+            this.account.address,
+            0
+        );
         expect(source["dept_name"]).to.equal("new_dept_name");
         expect(source["source_type"]).to.equal("new_source_type");
         expect(source["purpose"]).to.equal("new_purpose");
     });
     it("Edit Source Amount", async () => {
         expect(
-            Number((await this.NGOContract.readNGOSource(this.account.address, 0))["amount"]._hex)
+            Number(
+                (await this.NGOContract.readNGOSource(this.account.address, 0))[
+                    "amount"
+                ]._hex
+            )
         ).to.equal(200000);
         await this.NGOContract.editNGOSourceAmt(0, 500000);
         expect(
-            Number((await this.NGOContract.readNGOSource(this.account.address, 0))["amount"]._hex)
+            Number(
+                (await this.NGOContract.readNGOSource(this.account.address, 0))[
+                    "amount"
+                ]._hex
+            )
         ).to.equal(500000);
     });
     it("Edit Source Financial Year", async () => {
-        let source = await this.NGOContract.readNGOSource(this.account.address, 0);
+        let source = await this.NGOContract.readNGOSource(
+            this.account.address,
+            0
+        );
         expect(source["financial_year"][0]).to.equal(2022);
         expect(source["financial_year"][1]).to.equal(2023);
 
@@ -256,23 +289,31 @@ describe("NGOContract", function () {
     });
     it("Remove Source", async () => {
         expect(
-            (await this.NGOContract.readNGOSource(this.account.address, 0))["does_exist"]
+            (await this.NGOContract.readNGOSource(this.account.address, 0))[
+                "does_exist"
+            ]
         ).to.equal(true);
         await this.NGOContract.removeNGOSource(0);
         expect(
-            (await this.NGOContract.readNGOSource(this.account.address, 0))["does_exist"]
+            (await this.NGOContract.readNGOSource(this.account.address, 0))[
+                "does_exist"
+            ]
         ).to.equal(false);
     });
     it("Restore Source", async () => {
         expect(
-            (await this.NGOContract.readNGOSource(this.account.address, 0))["does_exist"]
+            (await this.NGOContract.readNGOSource(this.account.address, 0))[
+                "does_exist"
+            ]
         ).to.equal(false);
         await this.NGOContract.restoreNGOAttrs(1, 0);
         await expect(this.NGOContract.restoreNGOAttrs(1, 1)).to.be.revertedWith(
             "Source not found!"
         );
         expect(
-            (await this.NGOContract.readNGOSource(this.account.address, 0))["does_exist"]
+            (await this.NGOContract.readNGOSource(this.account.address, 0))[
+                "does_exist"
+            ]
         ).to.equal(true);
     });
     it("Get Total Sources", async () => {
