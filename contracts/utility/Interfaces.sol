@@ -34,8 +34,10 @@ interface NGOInter {
         string memory website_url
     ) external;
 
-    function editstrNGODetail(strDetails detail_code, string memory val)
-        external;
+    function editstrNGODetail(
+        strDetails detail_code,
+        string memory val
+    ) external;
 
     function verifyNGO(address id) external;
 
@@ -43,10 +45,17 @@ interface NGOInter {
 
     function editNGOAddress(uint8 addr_id, Address memory addr) external;
 
-    function editNGOPhoneNumber(uint8 ph_id, PhoneNumber memory phone_number)
-        external;
+    function editNGOPhoneNumber(
+        uint8 ph_id,
+        PhoneNumber memory phone_number
+    ) external;
 
     function editNGOFCRA(bool is_available, uint256 reg_no) external;
+
+    function getNGOTotals(
+        address id,
+        uint val_id
+    ) external view returns (uint val);
 
     function addNGOMember(
         string memory name,
@@ -55,16 +64,12 @@ interface NGOInter {
         string memory aadhar_card
     ) external;
 
-    function readNGOMember(uint256 id)
-        external
-        view
-        returns (Member memory member);
+    function readNGOMember(
+        address ngo_id,
+        uint256 member_id
+    ) external view returns (Member memory member);
 
-    function editNGOMember(
-        uint8 id,
-        uint8 val_id,
-        string memory val
-    ) external;
+    function editNGOMember(uint8 id, uint8 val_id, string memory val) external;
 
     function removeNGOMember(uint8 id) external;
 
@@ -76,19 +81,22 @@ interface NGOInter {
         string memory purpose
     ) external;
 
-    function readNGOSource(uint256 id)
-        external
-        view
-        returns (FundSource memory src);
+    function readNGOSource(
+        address ngo_id,
+        uint256 src_id
+    ) external view returns (FundSource memory src);
 
-    function editNGOSource(uint256 id, uint256 val_id, string memory val) external;
+    function editNGOSource(
+        uint256 id,
+        uint256 val_id,
+        string memory val
+    ) external;
 
     function editNGOSourceAmt(uint256 id, uint256 amount) external;
 
-    function editNGOSourceFY(
-        uint256 id,
-        uint256[2] memory val
-    ) external;
+    function editNGOSourceFY(uint256 id, uint256[2] memory val) external;
 
     function removeNGOSource(uint8 id) external;
+
+    function restoreNGOAttrs(uint256 val_id, uint256 id) external;
 }

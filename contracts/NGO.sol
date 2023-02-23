@@ -188,9 +188,10 @@ contract NGOContract is NGOInter {
     }
 
     function readNGOMember(
-        uint256 id
+        address ngo_id,
+        uint256 member_id
     ) external view returns (Member memory member) {
-        member = NGOs[msg.sender].members[id];
+        member = NGOs[ngo_id].members[member_id];
     }
 
     function editNGOMember(
@@ -233,13 +234,10 @@ contract NGOContract is NGOInter {
     }
 
     function readNGOSource(
-        uint256 id
+        address ngo_id,
+        uint256 src_id
     ) external view returns (FundSource memory src) {
-        require(
-            id <= NGOs[msg.sender].total_members_sources[1],
-            "Sources out of range"
-        );
-        src = NGOs[msg.sender].srcs[id];
+        src = NGOs[ngo_id].srcs[src_id];
     }
 
     function editNGOSource(
