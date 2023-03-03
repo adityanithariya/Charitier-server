@@ -88,17 +88,16 @@ struct NGO {
 struct Family {
     RegDetails reg_details;
     ContactDetails contact_details;
+    address registered_with;
     mapping(uint => FamilyMember) members;
     uint total_members;
 }
 
 struct Transaction {
     uint256 id;
-    string donor_uid;
+    address donor;
     address reciever;
-    string proofs;
     uint256 date;
-    bool is_verified;
 }
 
 struct Admin {
@@ -121,4 +120,18 @@ enum strDetails {
     achievements,
     email,
     website_url
+}
+
+enum AccountType {
+    admin,
+    ngo,
+    family
+}
+
+struct Post {
+    string uid;
+    address account;
+    AccountType account_type;
+    mapping(uint => Transaction) transactions;
+    uint total_transactions;
 }

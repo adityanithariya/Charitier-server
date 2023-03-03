@@ -86,6 +86,11 @@ describe("FamilyContract", () => {
             this.account.address
         );
     });
+    it("Verify Revert", async () => {
+        await expect(
+            this.FamilyContract.verifyFamily(this.account.address)
+        ).to.be.revertedWith("Unauthorized Access");
+    });
     it("isFamily Modifier Revert", async () => {
         [_, other_account] = await ethers.getSigners();
         await expect(

@@ -5,16 +5,23 @@ import "./Structures.sol";
 
 interface AdminInter {
     function isAdmin() external;
+
+    function createAdmin(Admin memory admin) external;
+
+    function editAdmin(Admin memory admin) external;
+
+    function getAdminList() external view returns (address[] memory adminList);
 }
 
 interface NGOInter {
+    function isNGOFunc() external view;
+
     function getNGOList(uint256 id) external view returns (address ngo);
 
     function createNGO(
         RegDetails memory,
         string memory,
         string memory,
-        address,
         string memory,
         string memory,
         SectorDetails memory,
@@ -73,8 +80,6 @@ interface NGOInter {
 
     function editNGOMember(uint8 id, uint8 val_id, string memory val) external;
 
-    function removeNGOMember(uint8 id) external;
-
     function addNGOSource(
         string memory dept_name,
         string memory source_type,
@@ -83,27 +88,26 @@ interface NGOInter {
         string memory purpose
     ) external;
 
+    function editNGOSource(
+        string memory dept_name,
+        string memory source_type,
+        uint256[2] memory financial_year,
+        uint256 amount,
+        string memory purpose,
+        uint id
+    ) external;
+
     function readNGOSource(
         address ngo_id,
         uint256 src_id
     ) external view returns (FundSource memory src);
 
-    function editNGOSource(
-        uint256 id,
-        uint256 val_id,
-        string memory val
-    ) external;
-
-    function editNGOSourceAmt(uint256 id, uint256 amount) external;
-
-    function editNGOSourceFY(uint256 id, uint256[2] memory val) external;
-
-    function removeNGOSource(uint8 id) external;
-
     function restoreNGOAttrs(uint256 val_id, uint256 id) external;
 }
 
 interface FamilyInter {
+    function isFamilyFunc() external view;
+
     function getFamilyList(uint id) external view returns (address family);
 
     function createFamily(
@@ -139,4 +143,8 @@ interface FamilyInter {
     function removeFamilyMember(uint id) external;
 
     function restoreFamilyMember(uint id) external;
+}
+
+interface CharitierInter {
+    function addPost() external;
 }

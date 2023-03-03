@@ -32,6 +32,13 @@ contract FamilyContract is FamilyInter {
         addrs[1] = admin_contract;
     }
 
+    function isFamilyFunc() external view {
+        require(
+            Families[msg.sender].reg_details.id == msg.sender,
+            "Account doesn't exists"
+        );
+    }
+
     function getFamilyList(uint id) external view returns (address family) {
         family = FamilyList[id];
     }
@@ -57,6 +64,17 @@ contract FamilyContract is FamilyInter {
         family.contact_details.email = contact_details.email;
         FamilyList.push(msg.sender);
         updateLastModified();
+    }
+
+    function verifyFamily(address id) external {
+        AdminInter(addrs[1]).isAdmin();
+        require(Families[id].reg_details.id == id, "NGO doesn't exist!");
+        require(
+            Families[id].reg_details.is_verified != true,
+            "Already Verified!"
+        );
+        Families[id].reg_details.is_verified = true;
+        Families[id].registered_with = msg.sender;
     }
 
     function editFamilyRegDetails(

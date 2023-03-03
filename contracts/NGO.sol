@@ -21,6 +21,17 @@ contract NGOContract is NGOInter {
         addrs[1] = ctr;
     }
 
+    function isNGOFunc() external view {
+        require(
+            NGOs[msg.sender].reg_details.id == msg.sender,
+            "Account doesn't exist"
+        );
+    }
+
+    function updateLastModified() internal {
+        NGOs[msg.sender].contact_details.last_modified = block.timestamp;
+    }
+
     modifier isNGO() {
         require(
             NGOs[msg.sender].reg_details.id == msg.sender,
@@ -29,11 +40,7 @@ contract NGOContract is NGOInter {
         _;
     }
 
-    function updateLastModified() internal {
-        NGOs[msg.sender].contact_details.last_modified = block.timestamp;
-    }
-
-    function getNGOList(uint256 id) external view returns(address ngo) {
+    function getNGOList(uint256 id) external view returns (address ngo) {
         ngo = NGOList[id];
     }
 
@@ -41,7 +48,6 @@ contract NGOContract is NGOInter {
         RegDetails memory reg_details,
         string memory reg_cert,
         string memory act_name,
-        address registered_with,
         string memory type_of_NGO,
         string memory name_of_NGO,
         SectorDetails memory sector,
@@ -65,7 +71,6 @@ contract NGOContract is NGOInter {
         );
         ngo.reg_cert = reg_cert;
         ngo.act_name = act_name;
-        ngo.registered_with = registered_with;
         ngo.type_of_NGO = type_of_NGO;
         ngo.name = name_of_NGO;
         ngo.sector = sector;
@@ -213,11 +218,6 @@ contract NGOContract is NGOInter {
         updateLastModified();
     }
 
-    function removeNGOMember(uint8 id) external isNGO {
-        NGOs[msg.sender].members[id].does_exist = false;
-        updateLastModified();
-    }
-
     function addNGOSource(
         string memory dept_name,
         string memory source_type,
@@ -247,32 +247,26 @@ contract NGOContract is NGOInter {
     }
 
     function editNGOSource(
-        uint256 id,
-        uint256 val_id,
-        string memory val
+        string memory dept_name,
+        string memory source_type,
+        uint256[2] memory financial_year,
+        uint256 amount,
+        string memory purpose,
+        uint id
     ) external isNGO {
-        FundSource storage src = NGOs[msg.sender].srcs[id];
-        if (val_id == 0) src.dept_name = val;
-        else if (val_id == 1) src.source_type = val;
-        else if (val_id == 2) src.purpose = val;
-        updateLastModified();
-    }
-
-    function editNGOSourceAmt(uint256 id, uint256 amount) external isNGO {
-        FundSource storage src = NGOs[msg.sender].srcs[id];
-        src.amount = amount;
-        updateLastModified();
-    }
-
-    function editNGOSourceFY(uint256 id, uint256[2] memory val) external isNGO {
-        FundSource storage src = NGOs[msg.sender].srcs[id];
-        src.financial_year = val;
-        updateLastModified();
-    }
-
-    function removeNGOSource(uint8 id) external isNGO {
         NGO storage ngo = NGOs[msg.sender];
-        ngo.srcs[id].does_exist = false;
+        FundSource storage fundsrc = ngo.srcs[id];
+        fundsrc.dept_name = dept_name;
+        fundsrc.source_type = source_type;
+        fundsrc.financial_year = financial_year;
+        fundsrc.amount = amount;
+        fundsrc.purpose = purpose;
+        updateLastModified();
+    }
+
+    function removeNGOAttrs(uint8 val_id, uint8 id) external isNGO {
+        if (val_id == 0) NGOs[msg.sender].members[id].does_exist = false;
+        else if (val_id == 1) NGOs[msg.sender].srcs[id].does_exist = false;
         updateLastModified();
     }
 
