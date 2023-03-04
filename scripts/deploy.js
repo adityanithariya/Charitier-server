@@ -15,6 +15,18 @@ async function main() {
     await ngo.deployed();
     obj.NGOContract = ngo.address;
 
+    const FamilyContract = await ethers.getContractFactory("FamilyContract");
+    const family = await FamilyContract.deploy(admin.address);
+
+    await family.deployed();
+    obj.FamilyContract = family.address;
+
+    const CharitierContract = await ethers.getContractFactory("Charitier");
+    const charitier = await CharitierContract.deploy();
+
+    await charitier.deployed();
+    obj.CharitierContract = charitier.address;
+
     if (!existsSync("./scripts/cache")) mkdirSync("./scripts/cache");
     writeFileSync("./scripts/cache/address.json", JSON.stringify(obj), "utf8");
 
